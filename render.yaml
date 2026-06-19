@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: maintenance-node-api
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: maintenance-postgres
+          property: connectionString
+
+  - type: web
+    name: maintenance-python-ocr
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+
+databases:
+  - name: maintenance-postgres
+    plan: free
